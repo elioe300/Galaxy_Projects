@@ -80,6 +80,10 @@ Tras ejecutar esta herramienta, todos los duplicados fueron eliminados, dejando 
 
 El llamado de variantes se realizó utilizando la herramienta **FreeBayes**, un método eficiente para identificar variantes genéticas en datos diploides. Este enfoque asegura la captura precisa de variantes de alta calidad y prepara los datos para su posterior filtrado y anotación.
 
+## Normalización de Variantes
+
+Tras el llamado de variantes, se realizó un paso de **normalización** utilizando **bcftools norm**. Este proceso es fundamental para garantizar la consistencia de las variantes detectadas, estandarizando su representación al reorganizar inserciones y deleciones (INDELs), además de resolver posibles conflictos en el archivo VCF.
+
 ## Filtrado de Variantes (Variant Filtering)
 
 Para mejorar la calidad de los datos resultantes del llamado de variantes, se aplicaron criterios de filtrado basados en las recomendaciones del artículo [_Effective filtering strategies to improve data quality from population-based whole exome sequencing studies_](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-125). Según los autores, un filtrado efectivo debe incluir:
