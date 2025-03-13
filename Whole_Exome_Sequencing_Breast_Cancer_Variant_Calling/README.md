@@ -38,8 +38,6 @@ Además, se usó el genoma de referencia la versión **GRCh38** que como indica 
 
 El total de lecturas analizadas fue de **45,303,149**, de las cuales el **99.63%** se mapearon exitosamente al genoma de referencia. Además, el **99.01%** de las lecturas se mapearon de forma adecuada como pares correctamente emparejados. El porcentaje de lecturas no emparejadas (_singletons_) fue bajo, representando solo el **0.22%**.  
 
-Estas métricas reflejan un alineamiento eficiente y de alta calidad, adecuado para los análisis posteriores.
-
 ## Procesamiento del Archivo BAM
 
 Para garantizar una alineación de alta calidad y preparar los datos para un análisis confiable de variantes, se realizó un procesamiento exhaustivo del archivo BAM. Según los autores de [_"Assembling and Validating Bioinformatic Pipelines for Next-Generation Sequencing Clinical Assays"_](https://meridian.allenpress.com/aplm/article/144/9/1118/427496/Assembling-and-Validating-Bioinformatic-Pipelines), las lecturas perfectamente alineadas tienen un puntaje de calidad de mapeo promedio (MAPQ) de **60** (1/10⁻⁶, es decir, una probabilidad del 0.0001% de que la alineación sea incorrecta). Por otro lado, un puntaje inferior a **30** (1/10⁻³, una probabilidad del 0.1% de error) generalmente se considera inaceptable.
@@ -86,12 +84,11 @@ Tras el llamado de variantes, se realizó un paso de **normalización** utilizan
 
 ## Filtrado de Variantes (Variant Filtering)
 
-Para mejorar la calidad de los datos resultantes del llamado de variantes, se aplicaron criterios de filtrado basados en las recomendaciones del artículo [_Effective filtering strategies to improve data quality from population-based whole exome sequencing studies_](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-125). Según los autores, un filtrado efectivo debe incluir:
+Para mejorar la calidad de los datos resultantes del llamado de variantes, se aplicaron criterios de filtrado basados en las recomendaciones del artículo [_Effective filtering strategies to improve data quality from population-based whole exome sequencing studies_](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-125). Según los autores, un filtrado efectivo debe enfocarse en garantizar la calidad y profundidad de las variantes detectadas. 
 
-- **QUAL > 30**: Variantes con un puntaje de calidad superior a 30, reduciendo la tasa de falsos positivos.  
-- **DP > 10**: Un soporte de profundidad de lectura mayor a 10, garantizando una mayor confianza en la llamada de variantes.
-
-Tras aplicar estos filtros, los datos resultantes presentan un nivel de ruido significativamente reducido, mejorando la confiabilidad para los análisis posteriores.
+Por lo tanto, se utilizó **bcftools view** con la opción `-i`, aplicando los siguientes criterios:
+- **QUAL > 30**: Variantes con un puntaje de calidad superior a 30, reduciendo la probabilidad de falsos positivos.  
+- **DP > 10**: Un soporte de profundidad de lectura mayor a 10, asegurando mayor confianza en la validez de las variantes llamadas.
 
 ## Anotación de Variantes
 
@@ -114,12 +111,11 @@ Esta priorización permitió enfocar el análisis en las variantes con mayor pro
 - **Stop gained**: 70  
 - **Stop loss**: 24
 
-
 ## Discusión de Variantes
 
 El análisis de variantes realizado con FreeBayes produjo un total de **52,217 variantes** clasificadas en diferentes tipos.
 
-#### Clases Funcionales de Variantes
+### Clases Funcionales de Variantes
 
 En términos funcionales, se detectaron:  
 - **Variantes missense**: 17,225 (43.729%), que alteran la secuencia de aminoácidos y pueden tener un efecto significativo.  
@@ -128,7 +124,7 @@ En términos funcionales, se detectaron:
 
 El ratio **missense/silent** de **0.7803** sugiere una proporción equilibrada entre variantes potencialmente dañinas y aquellas que no afectan la funcionalidad de las proteínas.
 
-#### Ts/Tv Ratio
+### Ts/Tv Ratio
 
 El **Ts/Tv ratio** (ratio de transiciones a transversiones) calculado fue de **2.5334**. Este valor está en el rango esperado para datos de exoma, indicando un mapeo y llamado de variantes de alta calidad. Este ratio es útil como métrica de validación, ya que un valor dentro del rango esperado refleja precisión en las llamadas de SNPs y la calidad general del análisis.
 
