@@ -6,21 +6,21 @@ Este projecto sigue los pasos básicos mostrados en las buenas prácticas a la h
 ## Información de la muestra 
 La muestra analizada proviene de tejido mamario de una mujer de 53 años de origen chino. Para la captura del exoma, usaron el TruSeq Exome Library Preparation Kit y como método de secuenciación usaron la plataforma de alto rendimiento Illumina NextSeq 500 generándose las lecturas son paired end. Este conjunto de datos está disponible en el repositorio SRA bajo el número de acceso [SRR9899132](https://www.ncbi.nlm.nih.gov/sra/?term=SRR9899132).
 
-## Metodología
-### Análisis de Control de Calidad
-#### Estadisticas básicas
+# Metodología
+## Análisis de Control de Calidad
+### Estadisticas básicas
 Para evaluar la calidad de las lecturas generadas, se utilizó **FastQC**, una herramienta ampliamente empleada en este tipo de análisis. Según las estadísticas básicas proporcionadas por FastQC, el contenido de GC es del **49%**, lo cual se desvía del promedio esperado de **41%** en el genoma humano completo. Esta desviación es esperada y correcta, ya que al tratarse de un experimento de **captura de exoma (WES)**, únicamente se enriquecen los exones, que suelen tener un mayor contenido de GC en comparación con el resto del genoma.
 <p align="center"> <img src="Recursos/Basic_statistics_raw_reads.png" alt="Estadisticas básicas de FastQC"> </p>
 
 ---
 
-#### Calidad de Secuencia por Base
+### Calidad de Secuencia por Base
 Para evaluar la calidad de las lecturas generadas, el gráfico de calidad de secuencia por base fue generado utilizando la codificación Sanger / Illumina 1.9. Este gráfico es una herramienta clave para identificar posibles problemas en la calidad de las lecturas. 
 <p align="center"> <img src="Recursos/Per_base_sequence_quality_raw_reads.png" alt="Gráfico de calidad de secuencia por base"> </p>
 
 ---
 
-#### Contenido de Secuencia por Base
+### Contenido de Secuencia por Base
 En la sección **Per base sequence content**, se detecta una **desregulación en el porcentaje de nucleótidos** en las posiciones finales. Este comportamiento es más notable para el nucleótido **adenina (A)**, que presenta un porcentaje del **0%** en la última posición analizada.
 <p align="center"> <img src="Recursos/Per_base_sequence_content_raw_reads.png" alt="Gráfico antes del filtrado con Trim Galore"> </p>
 
@@ -76,7 +76,7 @@ Tras ejecutar esta herramienta, todos los duplicados fueron eliminados, dejando 
 
 ## Llamado de Variantes (Variant Calling)
 
-El llamado de variantes se realizó utilizando la herramienta **FreeBayes**, un método eficiente para identificar variantes genéticas en datos diploides. Este enfoque asegura la captura precisa de variantes de alta calidad y prepara los datos para su posterior filtrado y anotación.
+El llamado de variantes se realizó utilizando la herramienta **FreeBayes**, un método eficiente para identificar variantes genéticas en datos diploides.
 
 ## Normalización de Variantes
 
