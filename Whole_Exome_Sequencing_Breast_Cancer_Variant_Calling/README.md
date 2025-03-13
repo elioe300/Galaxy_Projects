@@ -1,6 +1,6 @@
 # Whole Exome Sequencing Breast Cancer Variant Calling
 ## Introducción
-Este projecto sigue los pasos básicos mostrados en las buenas prácticas a la hora de identificar variantes en una muestra de Whole Exome Sequencing. El analisis consiste en los siguientes pasos:
+Este projecto sigue los pasos básicos mostrados en las buenas prácticas a la hora de identificar variantes en una muestra de Whole Exome Sequencing usando la plataforma Galaxy. El analisis consiste en los siguientes pasos:
 <p align="center"> <img src="Recursos/Workflow.png" alt="Workflow"> </p>
 
 ## Información de la muestra 
@@ -30,7 +30,11 @@ Para mejorar la calidad de las lecturas, se utilizó Trim Galore con la opción 
 
 ## Mapeo de Lecturas
 
-El proceso de alineamiento se realizó con **BWA-MEM** utilizando el genoma de referencia **GRCh38**. Las lecturas fueron ordenadas por coordenadas de manera predeterminada en Galaxy. A continuación, se presentan las estadísticas generales del alineamiento generadas por [**Samtools flagstat**](Recursos/Samtools%20flagstat.txt):
+El proceso de mapeo se llevó a cabo utilizando **BWA-MEM**, una herramienta ampliamente utilizada para la alineación de lecturas en análisis genómicos. Según el ensayo [_Assembling and Validating Bioinformatic Pipelines for Next-Generation Sequencing Clinical Assays_](https://www.tandfonline.com/doi/full/10.2144/000114492), el Burrows-Wheeler Aligner (BWA) ofrece una alineación más precisa en comparación con Bowtie2, lo que resulta en llamadas de variantes más fiables. Esto lo convierte en una opción preferida para aplicaciones clínicas.
+
+La elección de BWA-MEM se basó en su capacidad para manejar lecturas largas y complejas con alta precisión, siendo ideal para experimentos como la captura de exoma, donde la exactitud del mapeo es fundamental para minimizar errores en el llamado de variantes y garantizar datos de alta calidad.
+
+Además, se usó el genoma de referencia la versión **GRCh38** que como indica el ensayo [_Assembling and Validating Bioinformatic Pipelines for Next-Generation Sequencing Clinical Assays_](https://www.tandfonline.com/doi/full/10.2144/000114492) incluye mejoras significativas en comparación con las versiones anteriores. Estas mejoras permiten reducir errores en la detección de variantes, aumentando la precisión y fiabilidad de los resultados. Las lecturas fueron ordenadas por coordenadas de manera predeterminada en Galaxy. A continuación, se presentan las estadísticas generales del alineamiento generadas por [**Samtools flagstat**](Recursos/Samtools%20flagstat.txt).
 
 El total de lecturas analizadas fue de **45,303,149**, de las cuales el **99.63%** se mapearon exitosamente al genoma de referencia. Además, el **99.01%** de las lecturas se mapearon de forma adecuada como pares correctamente emparejados. El porcentaje de lecturas no emparejadas (_singletons_) fue bajo, representando solo el **0.22%**.  
 
