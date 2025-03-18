@@ -37,7 +37,7 @@ Estas cifras cumplen con las recomendaciones para RNA-seq. Según la empresa Ill
 
 #### 3. **Duplicados**  
 Los porcentajes de duplicados observados son algo elevados, pero esto es común en datos de RNA-seq debido a la alta expresión de ciertos genes. Aunque esto no invalida el análisis, es recomendable confirmar que los duplicados provienen de transcritos biológicos reales y no de artefactos técnicos. Para validar esto, se analizó la relación entre el porcentaje de duplicados y el contenido de GC.
-<p align="center"> <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/FastQC_GC_content.png" alt="Contenido de GC"> </p>
+<p align="center"> <img src="./Recursos/FastQC_GC_content.png" alt="Contenido de GC"> </p>
 
 El análisis del contenido de GC muestra que las lecturas siguen una distribución modal, sin la presencia de picos agudos ni dobles picos modales. Esto respalda la hipótesis de que los duplicados son biológicos y no producto de contaminación ni errores técnicos. Esto también se ve validado en la siguiente imagen dónde se observa que no hay prácticamente  presencia en el contenido de adaptadores de las secuencias:
 <p align="center"> <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/FastQC_Adapter_content.png" alt="Contenido de adaptadores"> </p>
