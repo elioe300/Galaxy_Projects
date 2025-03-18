@@ -116,5 +116,5 @@ ggplot(data, aes(x = logFC, y = -log10(FDR), col = DE)) +
 
 # Análisis de ontología génica (Gene Ontology, GO) para genes diferencialmente expresados
 go <- goana(res, species = "Mm")
-# Mostrar las 5 categorías más representativas en el dominio Celular (CC)
-topGO(go, ontology = "CC", number = 5)
+# Mostrar las 5 categorías más representativas
+topGO(go, number = 5)
