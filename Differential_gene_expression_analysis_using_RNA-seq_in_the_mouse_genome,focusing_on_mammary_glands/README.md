@@ -20,7 +20,7 @@ Estos datos están disponibles en el repositorio SRA:
 Para evaluar la calidad de las lecturas generadas, se utilizó la herramienta **FastQC**, ampliamente reconocida en análisis transcriptómicos. Inicialmente, se realizó un análisis individual para cada muestra, seguido por un análisis consolidado utilizando **MultiQC**, lo cual permitió obtener una visión comparativa y general de los datos crudos de RNA-seq.
 
 <p align="center">
-  <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/FastQC_general_statistics.png" alt="Estadísticas básicas de FastQC">
+  <img src="./Recursos/FastQC_general_statistics.png" alt="Estadísticas básicas de FastQC">
 </p>
 
 #### 1. **Contenido de GC**  
@@ -37,18 +37,18 @@ Estas cifras cumplen con las recomendaciones para RNA-seq. Según la empresa Ill
 
 #### 3. **Duplicados**  
 Los porcentajes de duplicados observados son algo elevados, pero esto es común en datos de RNA-seq debido a la alta expresión de ciertos genes. Aunque esto no invalida el análisis, es recomendable confirmar que los duplicados provienen de transcritos biológicos reales y no de artefactos técnicos. Para validar esto, se analizó la relación entre el porcentaje de duplicados y el contenido de GC.
-<p align="center"> <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/FastQC_GC_content.png" alt="Contenido de GC"> </p>
+<p align="center"> <img src="./Recursos/FastQC_GC_content.png" alt="Contenido de GC"> </p>
 
 El análisis del contenido de GC muestra que las lecturas siguen una distribución modal, sin la presencia de picos agudos ni dobles picos modales. Esto respalda la hipótesis de que los duplicados son biológicos y no producto de contaminación ni errores técnicos. Esto también se ve validado en la siguiente imagen dónde se observa que no hay prácticamente  presencia en el contenido de adaptadores de las secuencias:
-<p align="center"> <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/FastQC_Adapter_content.png" alt="Contenido de adaptadores"> </p>
+<p align="center"> <img src="./Recursos/FastQC_Adapter_content.png" alt="Contenido de adaptadores"> </p>
 
 ### Calidad de Secuencia por Base
 De acuerdo con el estudio titulado [_A survey of best practices for RNA-seq data analysis_](https://pmc.ncbi.nlm.nih.gov/articles/PMC4728800/#Sec3), "as a general rule, read quality decreases towards the 3’ end of reads, and if it becomes too low, bases should be removed to improve mappability." Sin embargo, la calidad de las lecturas crudas es adecuada y no presenta caídas significativas hacia el extremo 3’. Por lo tanto, no es necesario realizar un control de calidad sobre las lecturas crudas.
-<p align="center"> <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/FastQC_quality_scores.png" alt="Gráfico de calidad de secuencia por base"> </p>
+<p align="center"> <img src="./Recursos/FastQC_quality_scores.png" alt="Gráfico de calidad de secuencia por base"> </p>
 
 ### Contenido de Secuencia por Base
 En la sección **Per base sequence content**, se detecta una **desregulación en el porcentaje de nucleótidos** en las posiciones iniciales.
-<p align="center"> <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/FastQC_GC_sequence_content.png" alt="Gráfico de GC por base"> </p>
+<p align="center"> <img src="./Recursos/FastQC_GC_sequence_content.png" alt="Gráfico de GC por base"> </p>
 
 Tal como lo señala el **Center for Cancer Research (CCR)** del **National Cancer Institute (NCI)** en su guía [_Bioinformatics for Beginners 2022_](https://bioinformatics.ccr.cancer.gov/docs/b4b/Module2_RNA_Sequencing/Lesson10/), la variabilidad observada en las primeras 10-15 bases de las lecturas es un fenómeno normal en experimentos de RNA-seq. Esta fluctuación puede atribuirse al uso de *random primers* durante la preparación de la biblioteca, lo que genera un inicio sesgado en las lecturas.
 
@@ -57,7 +57,7 @@ Tal como lo señala el **Center for Cancer Research (CCR)** del **National Cance
 El proceso de mapeo se llevó a cabo utilizando **HISAT2**, una herramienta ampliamente utilizada para la alineación de lecturas en análisis transcriptómicos, empleando como referencia el genoma de ratón (**GRCh39/mm39**). Se utilizaron las opciones por defecto, donde el parámetro `-k` está configurado en **5**. En Galaxy, las lecturas mapeadas se ordenan por coordenadas de manera predeterminada.
 A continuación, se presentan las estadísticas generales del alineamiento, generadas por **MultiQC**:
 <p align="center">
-  <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/Mapping_quality_scores.png" alt="Estadísticas de calidad del alineamiento generadas por MultiQC">
+  <img src="./Recursos/Mapping_quality_scores.png" alt="Estadísticas de calidad del alineamiento generadas por MultiQC">
 </p>
 
 Estos resultados reflejan una alta calidad de alineamiento, ya que todas las muestras superan ampliamente el umbral del **75% de lecturas alineadas de manera única**, considerado como un indicador de buena calidad en experimentos de RNA-seq, según lo establecido en el [repositorio de Harvard Chan](https://github.com/hbctraining/Intro-to-rnaseq-hpc-salmon/blob/master/lessons/05_multiQC.md#assessing-the-quality-control-metrics). 
@@ -67,14 +67,14 @@ Estos resultados reflejan una alta calidad de alineamiento, ya que todas las mue
 ### Sesgo 5'-3'
 De acuerdo con las buenas prácticas descritas en el mismo repositorio, se analizó el sesgo 5'-3'. Se obtuvo un valor cercano a **1**, lo que indica una distribución uniforme de las lecturas a lo largo de los transcritos.
 <p align="center">
-  <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/Qualimap_5'3'_bias.png" alt="Qualimap 5'3' bias">
+  <img src="./Recursos/Qualimap_5'3'_bias.png" alt="Qualimap 5'3' bias">
 </p>
 
 
 ### Análisis de Uniones 
 El análisis de uniones muestra que el **81.7%** de las uniones identificadas corresponden a uniones conocidas. Este porcentaje elevado indica que la mayoría de las lecturas se alinean con regiones previamente anotadas en el genoma de referencia, lo cual es ideal para este estudio, dado que no busca identificar transcritos novedosos. 
 <p align="center">
-  <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/Qualimap_Junction_Analysis.png" alt="Qualimap Junction Analysis">
+  <img src="./Recursos/Qualimap_Junction_Analysis.png" alt="Qualimap Junction Analysis">
 </p>
 
 
@@ -83,7 +83,7 @@ En el [repositorio de Harvard Chan](https://github.com/hbctraining/Intro-to-rnas
 En este análisis, el **73%** de las lecturas se alinearon con regiones exónicas, superando el umbral esperado. Esto confirma que las lecturas provienen principalmente de mRNA .
 
 <p align="center">
-  <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/Qualimap_Reads_Genomic_Origin.png" alt="Qualimap Reads genomic origin">
+  <img src="./Recursos/Qualimap_Reads_Genomic_Origin.png" alt="Qualimap Reads genomic origin">
 </p>
 
 ## Conteo de lecturas
@@ -96,7 +96,7 @@ El conteo de lecturas se realizó utilizando la herramienta de featureCounts de 
 
 ## Análisis de Expresión Diferencial (DEG)
 
-El script completo puede consultarse [aquí](Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/DEG_analysis.R).
+El script completo puede consultarse [aquí](./Recursos/DEG_analysis.R).
 
 ### Metodología
 
@@ -112,7 +112,7 @@ El script completo puede consultarse [aquí](Differential_gene_expression_analys
 A continuación, se presenta un resumen de los genes diferencialmente expresados después del ajuste de *p-values* por el método de Benjamini-Hochberg (BH):
 
 <p align="center">
-  <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/summary_BH_test.png">
+  <img src="./Recursos/summary_BH_test.png">
 </p>
 
 #### 2. Volcano Plot
@@ -120,7 +120,7 @@ A continuación, se presenta un resumen de los genes diferencialmente expresados
 El siguiente gráfico muestra la distribución de genes diferencialmente expresados en función de su **log Fold Change (logFC)** y su significancia estadística (-log10(*FDR*)):  
 
 <p align="center">
-  <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/Rplot.png">
+  <img src="./Recursos/Rplot.png">
 </p>
 
 Los genes regulados a la baja se representan en **rojo**, mientras que los genes regulados al alza aparecen en **azul**.
@@ -132,7 +132,7 @@ El análisis de **Gene Ontology (GO)** se realizó utilizando el paquete **goana
 A continuación, se presentan las cinco categorías más representativas:
 
 <p align="center">
-  <img src="Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/Recursos/top_GO.png">
+  <img src="./Recursos/top_GO.png">
 </p>
 
 
