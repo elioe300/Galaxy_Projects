@@ -30,11 +30,12 @@ Para evaluar la calidad de las lecturas generadas, se utilizó la herramienta **
 Todas las muestras presentan un contenido de GC del **50.0%**, lo cual se encuentra dentro del rango típico y aceptable para análisis de RNA-seq.
 
 #### 2. **Número de Secuencias**  
-Las cifras de número de secuencias cumplen con las recomendaciones para RNA-seq de la empresa Illumina en experimentos de expresión génica.[_Gene expression profiling experiments that are looking for a quick snapshot of highly expressed genes may only need 5 million to 25 million reads per sample_](https://knowledge.illumina.com/library-preparation/rna-library-prep/library-preparation-rna-library-prep-reference_material-list/000001243).
+El número de secuencias obtenidas en este análisis cumple con las recomendaciones de [_Illumina_](https://knowledge.illumina.com/library-preparation/rna-library-prep/library-preparation-rna-library-prep-reference_material-list/000001243) para experimentos de perfilado de expresión génica. Según sus directrices, _"Gene expression profiling experiments that are looking for a quick snapshot of highly expressed genes may only need 5 million to 25 million reads per sample."_
 
-#### 3. **Duplicados**  
-Los porcentajes de duplicados observados son elevados, pero esto es común en datos de RNA-seq debido a la alta expresión de ciertos genes. Pero como en el estudio dice RNA-seq: Basic Bioinformatics Analysis (https://pmc.ncbi.nlm.nih.gov/articles/PMC6168365/#S5) Typical duplication rates range from 30% to 90%, often depending on sequencing depth and transcriptome size.
-Aunque esto no invalida el análisis, es recomendable confirmar que los duplicados provienen de transcritos biológicos reales y no de artefactos técnicos. Para validar esto, se analizó la relación entre el porcentaje de duplicados y el contenido de GC.
+#### 3. **Duplicados**
+Los porcentajes de duplicados observados son elevados, lo cual es una característica común en datos de RNA-seq debido a la alta expresión de ciertos genes. Según el estudio [*RNA-seq: Basic Bioinformatics Analysis*](https://pmc.ncbi.nlm.nih.gov/articles/PMC6168365/#S5), los índices de duplicación típicos en RNA-seq pueden variar entre **30% y 90%**, dependiendo de factores como la profundidad de secuenciación y el tamaño del transcriptoma.
+
+Aunque este nivel de duplicación no invalida el análisis, es importante confirmar que los duplicados provienen de transcritos biológicos reales en lugar de artefactos técnicos. Para validar esta suposición, se llevó a cabo un análisis de la relación entre el porcentaje de duplicados y el contenido de **GC**. Este enfoque permite evaluar si los duplicados están asociados con características genómicas específicas o si podrían ser producto de problemas técnicos durante el proceso de secuenciación.
 <p align="center"> <img src="./Recursos/FastQC_GC_content.png" alt="Contenido de GC"> </p>
 
 El análisis del contenido de GC muestra que las lecturas siguen una distribución modal, sin la presencia de picos agudos ni dobles picos modales. Esto también se ve validado en la siguiente imagen dónde se observa que no hay prácticamente  presencia en el contenido de adaptadores de las secuencias:
@@ -45,11 +46,11 @@ Siguiendo el razonamiento dado en mi proyecto [Differential gene expression anal
 <p align="center"> <img src="./Recursos/FastQC_quality_scores.png" alt="Gráfico de calidad de secuencia por base"> </p>
 
 ### Contenido de Secuencia por Base
-En la sección **Per base sequence content**, se detecta una **desregulación en el porcentaje de nucleótidos** en las posiciones iniciales, hecho ya explicado en la sección [Contenido de Secuencia por Base](../main/Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/README.md#contenido-de-secuencia-por-base)
-<p align="center"> <img src="./Recursos/FastQC_GC_sequence_content.png" alt="Gráfico de GC por base"> </p>
+En la sección **Per base sequence content**, se detecta una **desregulación en el porcentaje de nucleótidos** en las posiciones iniciales, hecho ya explicado en la sección [Contenido de Secuencia por Base](../main/Differential_gene_expression_analysis_using_RNA-seq_in_the_mouse_genome%2Cfocusing_on_mammary_glands/README.md#contenido-de-secuencia-por-base) de mi mencionado proyecto.
+<p align="center"> <img src="./Recursos/FastQC_GC_content.png" alt="Gráfico de GC por base"> </p>
 
 ## Mapeo de Lecturas
-El proceso de alineamiento de lecturas se llevó a cabo utilizando **RNA-star**, una herramienta ampliamente recomendada para el análisis de RNA-seq debido a su precisión y rapidez. Según el proyecto ENCODE (*Encyclopedia of DNA Elements*), RNA-star es parte de su pipeline estándar de RNA-seq, ya que combina un procesamiento relativamente rápido con alta precisión, características esenciales para proyectos transcriptómicos a gran escala [*Brief guide to RNA sequencing analysis for nonexperts in bioinformatics*](https://www.sciencedirect.com/science/article/pii/S1016847824000852#sec0010).
+El proceso de alineamiento de lecturas se llevó a cabo utilizando **RNA-star**, una herramienta altamente recomendada por el proyecto **ENCODE** (*Encyclopedia of DNA Elements*). Este proyecto, conocido por establecer estándares de gran prestigio en la investigación genómica, sugiere RNA-star debido a su combinación de alta precisión y velocidad en el procesamiento de datos, cualidades indispensables para el análisis de RNA-seq en estudios transcriptómicos de gran escala. [*Brief guide to RNA sequencing analysis for nonexperts in bioinformatics*](https://www.sciencedirect.com/science/article/pii/S1016847824000852#sec0010).
 
 - **Genoma de referencia:** [Drosophila_melanogaster.BDGP6.46.dna.toplevel.fa.gz](https://ftp.ensembl.org/pub/release-113/fasta/drosophila_melanogaster/dna/)
 - **Archivo GTF:** [Drosophila_melanogaster.BDGP6.46.113.gtf.gz](https://ftp.ensembl.org/pub/release-113/gtf/drosophila_melanogaster/)
@@ -94,9 +95,20 @@ En este análisis, el **85.97%** de las lecturas se alinearon con regiones exón
   <img src="./Recursos/Mapping_reads_genomic_origin.png" alt="Qualimap Reads genomic origin">
 </p>
 
+### Orientación de las Lecturas
+
+Para determinar la orientación de las lecturas en este proyecto, se utilizó el programa **infer_experiment.py** de la suite RSeQC. Este análisis identificó tres categorías principales: **Sense**, **Antisense** y **Undetermined**. Los resultados indicaron que una proporción significativa de las lecturas está clasificada como **Antisense**, mientras que una gran cantidad se catalogó como **Undetermined**.
+
+<p align="center">
+  <img src="./Recursos/Infer_experiment.png" alt="Qualimap Reads genomic origin">
+</p>
+
+Si bien el porcentaje de lecturas clasificadas como "Undetermined" puede generar dudas. Para confirmar que realmente es **antisense**, revisaremos las estadísticas generales de asignación de lecturas obtenidas con **featureCounts**.
+
+
 ## Conteo de lecturas
 
-El conteo de lecturas se realizó utilizando la herramienta de featureCounts de Galaxy para procesar el archivo BAM generado por **HISAT2**. Las opciones configuradas en la herramienta fueron las siguientes:
+El conteo de lecturas se realizó utilizando la herramienta de featureCounts de Galaxy para procesar el archivo BAM generado por **RNA-star**. Las opciones configuradas en la herramienta fueron las siguientes:
 - **Specify strand information (opción -s)**: **Stranded(Reverse)**
 - **Gene annotation file**: **Drosophila_melanogaster.BDGP6.46.113.gtf**
 - **Feature type (opción -t)**: **exon**
@@ -114,16 +126,6 @@ Para evaluar la eficacia del proceso de conteo de lecturas realizado con **featu
   - En este caso, todas las muestras superaron el **75% de lecturas asignadas**, lo que demuestra un alto nivel de precisión y éxito en el proceso de conteo.  
 
 A pesar de contar con un porcentaje significativo de lecturas clasificadas como *Undetermined* durante la evaluación de orientación, el alto porcentaje de lecturas asignadas indica que las configuraciones aplicadas en **featureCounts** fueron adecuadas y permitieron obtener resultados consistentes y confiables.
-
-### Orientación de las Lecturas
-
-Para determinar la orientación de las lecturas en este proyecto, se utilizó el programa **infer_experiment.py** de la suite RSeQC. Este análisis identificó tres categorías principales: **Sense**, **Antisense** y **Undetermined**. Los resultados indicaron que una proporción significativa de las lecturas está clasificada como **Antisense**, mientras que una gran cantidad se catalogó como **Undetermined**.
-
-<p align="center">
-  <img src="./Recursos/Infer_experiment.png" alt="Qualimap Reads genomic origin">
-</p>
-
-Si bien el porcentaje de lecturas clasificadas como "Undetermined" puede generar dudas. Para confirmar que realmente es **antisense**, revisaremos las estadísticas generales de asignación de lecturas obtenidas con **featureCounts**.
 
 ## Análisis de Expresión Diferencial (DEG)
 
