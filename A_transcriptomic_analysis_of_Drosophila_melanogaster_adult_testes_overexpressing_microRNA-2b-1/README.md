@@ -144,5 +144,25 @@ Basándonos en esta información, la metodología aplicada fue la siguiente:
 
 El script completo que reproduce este análisis puede consultarse [aquí](./Recursos/DEG_analysis.R).
 
-### Comparación de resultados 
+## Comparación de Resultados
+
+Para evaluar la separación entre las condiciones de control y de sobreexpresión del gen en este estudio, se generó un **plotMDS** utilizando el paquete **edgeR**. Este análisis permitió verificar que las muestras correspondientes a cada condición están claramente diferenciadas, como se puede observar en la siguiente imagen:
+<p align="center">
+  <img src="./Recursos/Rplot01.png" alt="PlotMDS">
+</p>
+
+- **Puntos verdes**: miR_2b
+- **Puntos rojos**: Control
+
+En el estudio original se identificaron **439 genes diferencialmente expresados**, mientras que en este análisis se obtuvieron **427 DEGs** bajo el mismo criterio de ajuste de p-valor (FDR < 0.05).
+<p align="center">
+  <img src="./Recursos/summarytest.png" alt="Número de DEGS">
+</p>
+
+Aunque este número es similar, las discrepancias podrían ser resultado de variaciones en los pasos metodológicos, ya que el artículo original no detalla de forma exacta los procedimientos seguidos durante la anotación de genes con la herramienta **DAVID**.
+
+Respecto a la ontología génica, los resultados obtenidos muestran similitudes en algunos procesos clave, pero también presentan diferencias notables que reflejan particularidades de cada análisis. Estas diferencias podrían ser atribuibles a factores como ajustes en los criterios de filtrado, anotaciones genómicas empleadas o diferencias en las herramientas utilizadas.
+
+Finalmente, al evaluar la reproducibilidad del artículo publicado desde una perspectiva biológica, este proyecto enfatiza la importancia crítica de la investigación reproducible en biología y en la ciencia en general. Garantizar que los métodos y resultados puedan ser replicados no solo aumenta la confiabilidad de los hallazgos, sino que también contribuye al avance del conocimiento científico de manera sólida y transparente.
+
 
