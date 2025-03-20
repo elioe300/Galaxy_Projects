@@ -72,13 +72,19 @@ GSEA_results <- fgsea(
 # Obtener las 6 vías más enriquecidas
 head(GSEA_results[order(pval), ])
 
-# Filtrar para seleccionar vías independientes (eliminando redundancias)
-collapsed_pathways <- collapsePathways(GSEA_results[order(pval)][pval < 0.05], bg_genes, rankings)
-main_pathways <- GSEA_results[pathway %in% collapsed_pathways$mainPathways][order(-NES), pathway]
+# Definir cuántas vías enriquecidas (positivas y negativas) se incluirán en el análisis.
+number_of_top_pathways_up = 10
+number_of_top_pathways_down = 10
 
-# Generar tabla de enriquecimiento visual
-plotGseaTable(bg_genes[main_pathways], rankings, GSEA_results, gseaParam = 0.5)
+# Seleccionar las vías enriquecidas más relevantes, tanto positivas como negativas.
+topPathwaysUp <- GSEA_results[ES > 0][head(order(pval), n = number_of_top_pathways_up), pathway]
+topPathwaysDown <- GSEA_results[ES < 0][head(order(pval), n = number_of_top_pathways_down), pathway]
 
-# Visualizar la vía más significativamente enriquecida
-plotEnrichment(bg_genes[[head(GSEA_results[order(padj), ], 1)$pathway]], rankings) + 
-  labs(title = head(GSEA_results[order(padj), ], 1)$pathway)
+# Combinar las vías enriquecidas positivas y negativas.
+topPathways <- c(topPathwaysUp, rev(topPathwaysDown))
+
+# Guardar un gráfico con las vías enriquecidas seleccionadas
+pdf(file = paste0(filename, '_gsea_top30pathways.pdf'), width = 20, height = 15)
+plotGseaTable(bg_genes[topPathways], stats = rankings, fgseaRes = GSEAres, gseaParam = 0.5)
+dev.off()
+
