@@ -36,12 +36,13 @@ El número total de lecturas por muestra es el siguiente:
 Estas cifras cumplen con las recomendaciones para RNA-seq. Según la empresa Illumina, en experimentos de expresión génica, [_Gene expression profiling experiments that are looking for a quick snapshot of highly expressed genes may only need 5 million to 25 million reads per sample_](https://knowledge.illumina.com/library-preparation/rna-library-prep/library-preparation-rna-library-prep-reference_material-list/000001243).
 
 #### 3. **Duplicados**  
-Los porcentajes de duplicados observados son algo elevados, pero esto es común en datos de RNA-seq debido a la alta expresión de ciertos genes. Aunque esto no invalida el análisis, es recomendable confirmar que los duplicados provienen de transcritos biológicos reales y no de artefactos técnicos. Para validar esto, se analizó la relación entre el porcentaje de duplicados y el contenido de GC.
+Los porcentajes de duplicados observados son algo elevados, pero esto es común en datos de RNA-seq debido a la alta expresión de ciertos genes. Aunque esto no invalida el análisis, es recomendable confirmar que los duplicados provienen de transcritos biológicos reales y no de artefactos técnicos. Para validar esto, se analizó la relación entre el porcentaje de duplicados y el contenido de GC. 
 <p align="center"> <img src="./Recursos/FastQC_GC_content.png" alt="Contenido de GC"> </p>
 
 El análisis del contenido de GC muestra que las lecturas siguen una distribución modal, sin la presencia de picos agudos ni dobles picos modales. Esto respalda la hipótesis de que los duplicados son biológicos y no producto de contaminación ni errores técnicos. Esto también se ve validado en la siguiente imagen dónde se observa que no hay prácticamente  presencia en el contenido de adaptadores de las secuencias:
 <p align="center"> <img src="./Recursos/FastQC_Adapter_content.png" alt="Contenido de adaptadores"> </p>
 
+Además, se recomienda generalmente no eliminar duplicados al trabajar con datos de RNA-seq, a menos que se utilicen identificadores moleculares únicos como indica en el estudio [(Klepikova et al. 2017)](https://pmc.ncbi.nlm.nih.gov/articles/PMC5357343/).
 ### Calidad de Secuencia por Base
 De acuerdo con el estudio titulado [_A survey of best practices for RNA-seq data analysis_](https://pmc.ncbi.nlm.nih.gov/articles/PMC4728800/#Sec3), "as a general rule, read quality decreases towards the 3’ end of reads, and if it becomes too low, bases should be removed to improve mappability." Sin embargo, la calidad de las lecturas crudas es adecuada y no presenta caídas significativas hacia el extremo 3’. Por lo tanto, no es necesario realizar un control de calidad sobre las lecturas crudas.
 <p align="center"> <img src="./Recursos/FastQC_quality_scores.png" alt="Gráfico de calidad de secuencia por base"> </p>
