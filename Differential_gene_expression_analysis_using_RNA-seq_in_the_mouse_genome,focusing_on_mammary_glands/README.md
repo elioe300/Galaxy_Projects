@@ -136,5 +136,8 @@ A continuación, se presentan las cinco categorías más representativas:
   <img src="./Recursos/top_GO.png">
 </p>
 
+El análisis de genes diferencialmente expresados permite identificar genes cuya expresión cambia significativamente entre diferentes condiciones experimentales. Sin embargo, para interpretar estos cambios en un contexto biológico más amplio, se emplean análisis de enriquecimiento como Over-Representation Analysis y Gene Set Enrichment Analysis. Empleando los links de abajo, se pueden visualizar los resultados obtenidos usando estas metodologías:
+- [Over-Representation Analysis](./Over-Representation_Analysis)
+- [Gene Set Enrichment Analysis](./Gene_Set_Enrichment_Analysis)
 
 ---
