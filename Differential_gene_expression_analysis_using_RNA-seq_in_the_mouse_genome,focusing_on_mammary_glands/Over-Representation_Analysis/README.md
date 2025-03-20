@@ -16,23 +16,60 @@ Este análisis se basa en comparar el conjunto de DEG con bases de datos de refe
 
 1. **Preprocesamiento de datos:**
    - Obtención de DEG.
+```r
+# Obtener los genes presentes en el conjunto de datos
+genes_in_dataset <- rownames(res_corrected)
+
+```
 
 2. **Filtrado de genes:**
    - Eliminación de genes no significativos según valores de p ajustados, en este caso **FDR > 0.05**.
    - Clasificación en genes regulados al alza y a la baja.
+```r
+# Filtrar genes significativos
+significant_genes <- data[data$DE != 'NO', ]
+
+# Separar genes en listas de regulados al alza y a la baja
+deg_list <- split(significant_genes, significant_genes$DE)
+
+# Definir umbrales para filtrado
+padj_threshold <- 0.05   # Umbral de significancia para p-ajustada
+gene_count_threshold <- 5 # Número mínimo de genes en una ruta
+```
 
 3. **Definición del fondo de genes:**
    - Se usa el conjunto total de genes medidos en el experimento como referencia para evitar sesgos.
+```r  
+# Leer archivo .gmt con anotaciones de rutas metabólicas
+gmt_file <- "./m5.go.bp.v2024.1.Mm.entrez.gmt"
+pathways_data <- read.gmt(gmt_file)
+
+# Filtrar rutas metabólicas que contienen genes presentes en el dataset
+filtered_pathways <- pathways_data[pathways_data$gene %in% genes_in_dataset, ]
+```
 
 4. **Análisis de enriquecimiento:**
    - Se emplean herramientas como `clusterProfiler` en R para realizar la prueba de sobre-representación.
    - Se comparan los DEG con bases de datos de vías y procesos biológicos, en este caso con GO.
+```r  
+enrichment_results <- lapply(names(deg_list), function(category) {
+  enricher(gene = rownames(deg_list[[category]]), TERM2GENE = filtered_pathways)
+})
+names(enrichment_results) <- names(deg_list)
+```
 
 5. **Filtrado de resultados:**
    - Se seleccionan solo los términos significativamente enriquecidos según un umbral de p-ajustada (< 0.05) y un mínimo de genes por vía.
-
+```r  
+selected_pathways <- unique(results_df$ID[results_df$p.adjust < padj_threshold & results_df$Count > gene_count_threshold])
+final_results <- results_df[results_df$ID %in% selected_pathways, ]
+```
 6. **Visualización de resultados:**
-   - Se generan gráficos como mapas de calor, gráficos de dot plot o redes de interacciones.
+   - Se generan tablas para visualizar las vías enriquecidas.
+```r 
+filename = "GO.RDS"
+write.csv(res_df, paste0(filename, '_resclusterp.csv'), row.names = FALSE)
+```
 
 ## Implementación en R
 
