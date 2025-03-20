@@ -79,7 +79,8 @@ Para realizar este análisis en R, se utilizó el paquete `fgsea`. Para realizar
 El código completo con todos los pasos necesarios se encuentra en el siguiente script:
 - [GSEA.R](./Recursos/GSEA.R)
 
-En este archivo se incluyen todos los pasos descritos anteriormente para realizar el análisis de enriquecimiento de conjuntos de genes utilizando datos de expresión diferencial y bases de datos funcionales.
+En este archivo se incluyen todos los pasos descritos anteriormente para realizar el análisis de enriquecimiento de conjuntos de genes utilizando datos de expresión diferencial y bases de datos funcionales. Debajo se muestra una imagen con las vías más significativamente enriquecidas:
+[!imagen](./Recursos/GO.RDS_gsea_top30pathways.pdf)
 
 Quiero agradecer a Laura, la persona detrás de biostatsquid, por su dedicación al crear estos tutoriales. Su esfuerzo por enseñar y divulgar conceptos complejos de forma sencilla es de gran ayuda para bioinformáticos recién graduados.
 
