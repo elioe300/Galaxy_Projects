@@ -31,7 +31,7 @@ Los datos utilizados incluyen lecturas _paired end_ de **RNA-Seq** generadas con
 
 Para no alargar este README, se informa que las lecturas presentan una buena calidad. Los valores de GC están dentro de lo esperado para datos de RNA-seq, los duplicados son aceptables, el contenido de adaptadores es despreciable, y el número de secuencias es adecuado para un análisis de expresión diferencial. 
 
-Las imágenes relacionadas con el control de calidad se pueden visualizar en el siguiente enlace: [Control de Calidad](./Differential_gene_expression_of_human_lung_adenocarcinoma_cell_lines/Control_Calidad)
+Las imágenes relacionadas con el control de calidad se pueden visualizar en el siguiente enlace: [Control de Calidad](./Control_Calidad)
 
 ## Pseudomapping
 
@@ -52,7 +52,7 @@ Para explorar las características iniciales de los datos RNA-seq antes de aplic
 Cada violín ilustra la densidad de los datos de expresión para cada muestra, proporcionando una idea de cómo se distribuyen los genes. La línea negra en el centro de cada violín señala la **mediana** de la expresión, que sirve como referencia para los niveles centrales de cada muestra.
 
 <p align="center">
-  <img src="./Differential_gene_expression_of_human_lung_adenocarcinoma_cell_lines/Recursos/LogCPMnofiltnonTMM.png">
+  <img src="./Recursos/LogCPMnofiltnonTMM.png">
 </p>
 
 Se observa una acumulación significativa de genes con baja expresión por debajo de la mediana. Estos genes suelen introducir ruido en el análisis y no aportan información biológicamente relevante. El paquete **edgeR** tiene una opción denominada `filterbyExpr` para eliminar genes de baja expresión y asegurar que solo se incluyan aquellos que están biológicamente activos y relevantes para el análisis de expresión diferencial.
@@ -62,7 +62,7 @@ Se observa una acumulación significativa de genes con baja expresión por debaj
 Tras aplicar el filtro `filterByExpr`, se observan cambios significativos en la distribución de los datos RNA-seq, reflejados en la gráfica:
 
 <p align="center">
-  <img src="./Differential_gene_expression_of_human_lung_adenocarcinoma_cell_lines/Recursos/LogCPMfilterednonTMM.png">
+  <img src="./Recursos/LogCPMfilterednonTMM.png">
 </p>
 
 Los genes con baja expresión, que generan ruido en los datos y afectan la interpretación, han sido eliminados. Esto se traduce en unas distribuciones más homogéneas y limpias. Tras el filtrado de genes, la mediana está ajustada a valores de expresión logCPM donde los genes ya no son ruidosos, proporcionando una referencia adecuada para comparaciones entre muestras.
@@ -73,7 +73,7 @@ Aunque los datos han sido filtrados, es necesario proceder con la normalización
 Después de aplicar la normalización por TMM (Trimmed Mean of M-values), los datos RNA-seq muestran una distribución ajustada y comparable entre las muestras, reflejada en la gráfica:
 
 <p align="center">
-  <img src="./Differential_gene_expression_of_human_lung_adenocarcinoma_cell_lines/Recursos/LogCPMfilteredTMM.png">
+  <img src="./Recursos/LogCPMfilteredTMM.png">
 </p>
 
 Las distribuciones de logCPM son ahora más consistentes entre las muestras, lo que indica que se han corregido las diferencias técnicas, como la profundidad de secuenciación o la composición de las librerías.
@@ -81,8 +81,47 @@ Las líneas negras que representan las medianas de las distribuciones están aho
 
 Gracias a TMM, las variaciones no biológicas entre las muestras han sido mitigadas, garantizando que cualquier diferencia observada sea mayoritariamente de origen biológico.
 
+### ¿Qué es un plot MDS?
 
-El plot MDS (Multidimensional Scaling Plot) es una herramienta para visualizar las relaciones entre las muestras basándose en sus perfiles de expresión génica.
+El plot MDS (*Multidimensional Scaling Plot*) es una herramienta de visualización utilizada para representar gráficamente las relaciones entre muestras en un espacio de menor dimensión, generalmente en dos dimensiones. Suele ser un paso antes de proceder con análisis diferenciales, ya que ayuda a confirmar que las agrupaciones observadas coinciden con las expectativas del diseño experimental. Nos permite detectar si los agrupamientos entre muestras reflejan similitudes biológicas o hay outliers, ya sea por errores técnicos o por diferencias significativas en la biología subyacente.
+
+### Análisis del plot MDS para las 4 muestras
+
+El plot MDS generado para las muestras **H1975_1**, **H1975_2**, **HCC827_1** y **HCC827_2** muestra una clara separación entre dos grupos:
+
+<p align="center">
+  <img src="./Recursos/PlotMDS.png">
+</p>
+
+- Las muestras **H1975_1** y **H1975_2** están cercanas en el espacio MDS, lo que indica que tienen perfiles de expresión génica muy similares.  
+- Las muestras **HCC827_1** y **HCC827_2** forman un grupo separado, reflejando la consistencia entre las réplicas biológicas de la línea celular HCC827.
+
+El plot MDS confirma que las diferencias observadas entre las muestras son consistentes con las expectativas experimentales: las réplicas biológicas de cada línea celular son similares entre sí, pero las líneas celulares H1975 y HCC827 tienen perfiles de expresión claramente distintos. Esto valida el diseño experimental y sugiere que los datos son confiables para proceder con análisis de expresión diferencial.
+
+### Comprobación de la Distribución de p-valores
+Un paso, que he visto poco, es la comprobación de la distribución de los p-valores. Esto es relevante en nuestro caso porque estamos realizando una prueba estadistica con cientos, miles o incluso millones de pvalores es impotante en cuenta la distribución de los p-valores. Al revisar el histograma, podemos identificar inmediatamente si la prueba estadística ha capturado diferencias significativas a través de muchos p-valores muy pequeños o, por el contrario, si la distribución es completamente uniforme, lo que podría indicar falta de señal o problemas en el análisis.
+
+Es aconsejable generar un histograma de los p-valores antes de aplicar cualquier corrección por pruebas múltiples, control de la tasa de falsos descubrimientos u otro método de interpretación. Este gráfico permite obtener una visión inmediata del comportamiento de las pruebas a lo largo de todas las hipótesis y facilita la identificación de posibles problemas.
+
+A continuación, se muestran seis versiones aproximadas de lo que puede parecer el histograma:
+
+<p align="center">
+  <img src="./Recursos/Ejemplos_pvalores.png">
+</p>
+
+En nuestros datos, el histograma de p-valores muestra una distribución muy similar a la versión **A** de los ejemplos, en la que se observa una alta frecuencia de p-valores pequeños que decae rápidamente hacia valores mayores.
+
+<p align="center">
+  <img src="./Recursos/DistribucionFDR.png">
+</p>
+
+Esto sugiere que:
+- Muchas de las pruebas resultan en p-valores bajos, lo que indica evidencia significativa contra la hipótesis nula en numerosos casos.
+- La forma del histograma es la esperada bajo un escenario de descubrimientos reales, lo que confiere confianza en la robustez de los análisis realizados antes de la corrección por pruebas múltiples.
+
+
+
+
 
 
 
