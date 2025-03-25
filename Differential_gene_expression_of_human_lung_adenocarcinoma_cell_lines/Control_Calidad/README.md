@@ -27,7 +27,7 @@
 
 ### Calidad de Secuencia por Base
 <p align="center">
-  <img src="../Recursos/HCC_827_quality_scores.png">
+  <img src="../Recursos/HCC_827_Quality_Scores.png">
 </p>
 
 ### Contenido de GC
