@@ -4,8 +4,7 @@ Este proyecto tiene como objetivo profundizar en los aspectos básicos de **RNA-
 
 - La creación de gráficos para evaluar el estado de las muestras antes del análisis.
 - La visualización de los efectos del filtrado de genes de baja expresión mediante gráficos específicos.
-- El uso de gráficos como **MDS**, **PCA** y **barplots** para explorar la distribución del p-valor y otros parámetros relevantes.
-- Aplicación de las herramientas de **EdgeR** como `plotBCV` y gráficos relacionados con la binomial negativa, examinando y explicando cómo estas afectan a los datos.
+- El uso de gráficos como **MDS**, y **barplots** para explorar la distribución del p-valor y otros parámetros relevantes.
 
 Además, se busca experimentar con el método de **pseudomapping** utilizando la herramienta **Salmon** como parte del flujo de trabajo. También se incluye un análisis básico de expresión diferencial (DGE) empleando **R**.
 
@@ -81,6 +80,9 @@ Las líneas negras que representan las medianas de las distribuciones están aho
 
 Gracias a TMM, las variaciones no biológicas entre las muestras han sido mitigadas, garantizando que cualquier diferencia observada sea mayoritariamente de origen biológico.
 
+*(_Agradezco a Daniel Beiting por la profunda explicación dada sobre el análisis transcriptómico en su página [DIYtrasncriptomics](https://diytranscriptomics.com/), se ha usado parte de sus scripts para visualizar todos los pasos anteriormente mencionados_)*
+
+
 ### ¿Qué es un plot MDS?
 
 El plot MDS (*Multidimensional Scaling Plot*) es una herramienta de visualización utilizada para representar gráficamente las relaciones entre muestras en un espacio de menor dimensión, generalmente en dos dimensiones. Suele ser un paso antes de proceder con análisis diferenciales, ya que ayuda a confirmar que las agrupaciones observadas coinciden con las expectativas del diseño experimental. Nos permite detectar si los agrupamientos entre muestras reflejan similitudes biológicas o hay outliers, ya sea por errores técnicos o por diferencias significativas en la biología subyacente.
@@ -127,6 +129,12 @@ Tras haber completado todos los puntos de control y verificado que se han implem
 is.de1 <- decideTests(result, adjust.method = "BH", p.value = 0.05, lfc=1)
 summary(is.de1)
 ```
+
+<p align="center">
+  <img src="./Recursos/Resultado_Test.png">
+</p>
+
+El script completo se puede visualizar [aquí](./Recursos/DEG_Salmon.R)
 
 
 
