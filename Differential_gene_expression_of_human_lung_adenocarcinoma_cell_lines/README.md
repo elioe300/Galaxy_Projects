@@ -99,15 +99,15 @@ El plot MDS generado para las muestras **H1975_1**, **H1975_2**, **HCC827_1** y 
 El plot MDS confirma que las diferencias observadas entre las muestras son consistentes con las expectativas experimentales: las réplicas biológicas de cada línea celular son similares entre sí, pero las líneas celulares H1975 y HCC827 tienen perfiles de expresión claramente distintos. Esto valida el diseño experimental y sugiere que los datos son confiables para proceder con análisis de expresión diferencial.
 
 ### Comprobación de la Distribución de p-valores
-Un paso, que he visto poco, es la comprobación de la distribución de los p-valores. Esto es relevante en nuestro caso porque estamos realizando una prueba estadistica con cientos, miles o incluso millones de pvalores es impotante en cuenta la distribución de los p-valores. Al revisar el histograma, podemos identificar inmediatamente si la prueba estadística ha capturado diferencias significativas a través de muchos p-valores muy pequeños o, por el contrario, si la distribución es completamente uniforme, lo que podría indicar falta de señal o problemas en el análisis.
-
-Es aconsejable generar un histograma de los p-valores antes de aplicar cualquier corrección por pruebas múltiples, control de la tasa de falsos descubrimientos u otro método de interpretación. Este gráfico permite obtener una visión inmediata del comportamiento de las pruebas a lo largo de todas las hipótesis y facilita la identificación de posibles problemas.
+Otro paso recomendable a realizar es la comprobación de la distribución de los p-valores. Esto es relevante, ya que en nuestro caso porque estamos realizando una prueba estadistica con cientos, miles o incluso millones de pvalores. Al revisar el histograma, podemos identificar inmediatamente si la prueba estadística ha capturado diferencias significativas a través de muchos p-valores muy pequeños o, por el contrario, si la distribución es completamente uniforme, lo que podría indicar falta de señal o problemas en el análisis. Este gráfico permite obtener una visión inmediata del comportamiento de las pruebas a lo largo de todas las hipótesis y facilita la identificación de posibles problemas.
 
 A continuación, se muestran seis versiones aproximadas de lo que puede parecer el histograma:
 
 <p align="center">
   <img src="./Recursos/Ejemplos_pvalores.png">
 </p>
+
+*Imagen tomada de [How to interpret a p-value histogram](http://varianceexplained.org/statistics/interpreting-pvalue-histogram/) por David Robinson.*
 
 En nuestros datos, el histograma de p-valores muestra una distribución muy similar a la versión **A** de los ejemplos, en la que se observa una alta frecuencia de p-valores pequeños que decae rápidamente hacia valores mayores.
 
@@ -118,6 +118,18 @@ En nuestros datos, el histograma de p-valores muestra una distribución muy simi
 Esto sugiere que:
 - Muchas de las pruebas resultan en p-valores bajos, lo que indica evidencia significativa contra la hipótesis nula en numerosos casos.
 - La forma del histograma es la esperada bajo un escenario de descubrimientos reales, lo que confiere confianza en la robustez de los análisis realizados antes de la corrección por pruebas múltiples.
+
+*(_Agradezco a Ming ‘Tommy’ Tang por la maravillosa explicación dada respecto el [p-valor](https://divingintogeneticsandgenomics.com/post/understanding-p-value-multiple-comparisons-fdr-and-q-value/), y [la importancia de realizar el paso del histograma](https://divingintogeneticsandgenomics.com/post/downstream-of-bulk-rnaseq-read-in-salmon-output-using-tximport-and-then-deseq2/)_)*
+
+### Test estadístico
+Tras haber completado todos los puntos de control y verificado que se han implementado los procedimientos necesarios para minimizar la variabilidad técnica y conservar únicamente los genes relevantes, se procede a realizar el test estadístico. Para ello, se emplea el método de Benjamini-Hochberg para controlar la tasa de descubrimientos falsos, estableciéndose un p-valor de 0,05 y utilizando un logFoldchange de 1, que corresponde al valor predeterminado.
+```r
+is.de1 <- decideTests(result, adjust.method = "BH", p.value = 0.05, lfc=1)
+summary(is.de1)
+```
+
+
+
 
 
 
