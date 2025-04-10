@@ -1,133 +1,167 @@
 # Whole Exome Sequencing Breast Cancer Variant Calling
-## Introducción
-Este projecto sigue los pasos básicos mostrados en las buenas prácticas a la hora de identificar variantes en una muestra de Whole Exome Sequencing usando la plataforma Galaxy. El analisis consiste en los siguientes pasos:
+
+## Introduction
+This project follows the basic steps outlined in good practices for identifying variants in a Whole Exome Sequencing sample using the Galaxy platform. The analysis consists of the following steps:  
 <p align="center"> <img src="Recursos/Workflow.png" alt="Workflow"> </p>
 
-## Información de la muestra 
-La muestra analizada proviene de tejido mamario de una mujer de 53 años de origen chino. Para la captura del exoma, usaron el TruSeq Exome Library Preparation Kit y como método de secuenciación usaron la plataforma de alto rendimiento Illumina NextSeq 500 generándose las lecturas son paired end. Este conjunto de datos está disponible en el repositorio SRA bajo el número de acceso [SRR9899132](https://www.ncbi.nlm.nih.gov/sra/?term=SRR9899132).
+---
 
-# Metodología
-## Análisis de Control de Calidad
-### Estadisticas básicas
-Para evaluar la calidad de las lecturas generadas, se utilizó **FastQC**, una herramienta ampliamente empleada en este tipo de análisis. Según las estadísticas básicas proporcionadas por FastQC, el contenido de GC es del **49%**, lo cual se desvía del promedio esperado de **41%** en el genoma humano completo. Esta desviación es esperada y correcta, ya que al tratarse de un experimento de **captura de exoma (WES)**, únicamente se enriquecen los exones, que suelen tener un mayor contenido de GC en comparación con el resto del genoma.
-<p align="center"> <img src="Recursos/Basic_statistics_raw_reads.png" alt="Estadisticas básicas de FastQC"> </p>
+## Sample Information
+The analyzed sample comes from breast tissue of a 53-year-old Chinese woman. For exome capture, the TruSeq Exome Library Preparation Kit was used, and sequencing was performed using the high-throughput Illumina NextSeq 500 platform, generating paired-end reads. This dataset is available in the SRA repository under the accession number [SRR9899132](https://www.ncbi.nlm.nih.gov/sra/?term=SRR9899132).
 
 ---
 
-### Calidad de Secuencia por Base
-Para evaluar la calidad de las lecturas generadas, el gráfico de calidad de secuencia por base fue generado utilizando la codificación Sanger / Illumina 1.9. Este gráfico es una herramienta clave para identificar posibles problemas en la calidad de las lecturas. 
-<p align="center"> <img src="Recursos/Per_base_sequence_quality_raw_reads.png" alt="Gráfico de calidad de secuencia por base"> </p>
+# Methodology
+
+## Quality Control Analysis
+
+### Basic Statistics
+To evaluate the quality of the generated reads, **FastQC** was used, a widely employed tool for this type of analysis. According to the basic statistics provided by FastQC, the GC content is **49%**, which deviates from the expected average of **41%** in the whole human genome. This deviation is expected and correct since the experiment is a **whole exome sequencing (WES)** capture, which enriches exons, typically having higher GC content compared to the rest of the genome.  
+<p align="center"> <img src="Recursos/Basic_statistics_raw_reads.png" alt="FastQC Basic Statistics"> </p>
 
 ---
 
-### Contenido de Secuencia por Base
-En la sección **Per base sequence content**, se detecta una **desregulación en el porcentaje de nucleótidos** en las posiciones finales. Este comportamiento es más notable para el nucleótido **adenina (A)**, que presenta un porcentaje del **0%** en la última posición analizada.
-<p align="center"> <img src="Recursos/Per_base_sequence_content_raw_reads.png" alt="Gráfico antes del filtrado con Trim Galore"> </p>
+### Sequence Quality per Base
+To evaluate the quality of the generated reads, the per-base sequence quality graph was generated using Sanger/Illumina 1.9 encoding. This graph is a crucial tool for identifying potential issues in read quality.  
+<p align="center"> <img src="Recursos/Per_base_sequence_quality_raw_reads.png" alt="Per Base Sequence Quality Graph"> </p>
 
-## Filtrado de lecturas
-Para mejorar la calidad de las lecturas, se utilizó Trim Galore con la opción --three_prime_clip_R1/2, eliminando las últimas 5 bases (5 bp) que presentaban problemas de calidad en los extremos 3'. Según las indicaciones de S. P. Pfeifer en [_From next-generation resequencing reads to a high-quality variant data set_](https://pmc.ncbi.nlm.nih.gov/articles/PMC5234474), estas lecturas se clasifican dentro del "Potential issue 1: low-quality data" y siguen la dinámica descrita en la [Figura 2b](https://pmc.ncbi.nlm.nih.gov/articles/PMC5234474/#fig2), por lo que es recomendable la eliminación de estas lecturas.
-<p align="center"> <img src="Recursos/Per_base_sequence_content_trim_reads.png" alt="Gráfico tras filtrado con Trim Galore"> </p>
+---
 
-## Mapeo de Lecturas
+### Sequence Content per Base
+In the **Per base sequence content** section, a **deregulation in nucleotide percentages** is detected in the final positions. This behavior is particularly noticeable for **adenine (A)**, which shows a percentage of **0%** in the last analyzed position.  
+<p align="center"> <img src="Recursos/Per_base_sequence_content_raw_reads.png" alt="Graph Before Trim Galore Filtering"> </p>
 
-El proceso de mapeo se llevó a cabo utilizando **BWA-MEM**, una herramienta ampliamente utilizada para la alineación de lecturas en análisis genómicos. Según el ensayo [_Assembling and Validating Bioinformatic Pipelines for Next-Generation Sequencing Clinical Assays_](https://www.tandfonline.com/doi/full/10.2144/000114492), el Burrows-Wheeler Aligner (BWA) ofrece una alineación más precisa en comparación con Bowtie2, lo que resulta en llamadas de variantes más fiables. Esto lo convierte en una opción preferida para aplicaciones clínicas.
+---
 
-La elección de BWA-MEM se basó en su capacidad para manejar lecturas largas y complejas con alta precisión, siendo ideal para experimentos como la captura de exoma, donde la exactitud del mapeo es fundamental para minimizar errores en el llamado de variantes y garantizar datos de alta calidad.
+## Read Filtering
+To improve read quality, Trim Galore was used with the --three_prime_clip_R1/2 option, removing the last 5 bases (5 bp) that presented quality issues at the 3' ends. Following S. P. Pfeifer's recommendations in [_From next-generation resequencing reads to a high-quality variant data set_](https://pmc.ncbi.nlm.nih.gov/articles/PMC5234474), these reads fall under "Potential issue 1: low-quality data" and follow the dynamics described in [Figure 2b](https://pmc.ncbi.nlm.nih.gov/articles/PMC5234474/#fig2), making their removal advisable.  
+<p align="center"> <img src="Recursos/Per_base_sequence_content_trim_reads.png" alt="Graph After Trim Galore Filtering"> </p>
 
-Además, se usó el genoma de referencia la versión **GRCh38** que como indica el ensayo [_Assembling and Validating Bioinformatic Pipelines for Next-Generation Sequencing Clinical Assays_](https://www.tandfonline.com/doi/full/10.2144/000114492) incluye mejoras significativas en comparación con las versiones anteriores. Estas mejoras permiten reducir errores en la detección de variantes, aumentando la precisión y fiabilidad de los resultados. Las lecturas fueron ordenadas por coordenadas de manera predeterminada en Galaxy. A continuación, se presentan las estadísticas generales del alineamiento generadas por [**Samtools flagstat**](Recursos/Samtools%20flagstat.txt).
+---
 
-El total de lecturas analizadas fue de **45,303,149**, de las cuales el **99.63%** se mapearon exitosamente al genoma de referencia. Además, el **99.01%** de las lecturas se mapearon de forma adecuada como pares correctamente emparejados. El porcentaje de lecturas no emparejadas (_singletons_) fue bajo, representando solo el **0.22%**.  
+## Read Mapping
 
-## Procesamiento del Archivo BAM
+The mapping process was performed using **BWA-MEM**, a widely used tool for read alignment in genomic analyses. According to the study [_Assembling and Validating Bioinformatic Pipelines for Next-Generation Sequencing Clinical Assays_](https://www.tandfonline.com/doi/full/10.2144/000114492), Burrows-Wheeler Aligner (BWA) offers more accurate alignment compared to Bowtie2, resulting in more reliable variant calls, making it the preferred choice for clinical applications.
 
-Para garantizar una alineación de alta calidad y preparar los datos para un análisis confiable de variantes, se realizó un procesamiento exhaustivo del archivo BAM. Según los autores de [_"Assembling and Validating Bioinformatic Pipelines for Next-Generation Sequencing Clinical Assays"_](https://meridian.allenpress.com/aplm/article/144/9/1118/427496/Assembling-and-Validating-Bioinformatic-Pipelines), las lecturas perfectamente alineadas tienen un puntaje de calidad de mapeo promedio (MAPQ) de **60** (1/10⁻⁶, es decir, una probabilidad del 0.0001% de que la alineación sea incorrecta). Por otro lado, un puntaje inferior a **30** (1/10⁻³, una probabilidad del 0.1% de error) generalmente se considera inaceptable.
+The choice of BWA-MEM was based on its ability to handle long and complex reads with high precision, ideal for experiments like exome capture, where mapping accuracy is crucial for minimizing errors in variant calling and ensuring high-quality data.
 
-Utilizando la herramienta **Filter BAM**, se aplicó un filtro para seleccionar lecturas con un **MAPQ ≥30**, eliminando aquellas de menor calidad. Además, se descartaron todas las lecturas que no estuvieran _mapped_ ni _mate mapped_ con el objetivo de obtener un conjunto de datos más limpio y de mayor calidad.
+Additionally, the reference genome **GRCh38** was used, as indicated in [_Assembling and Validating Bioinformatic Pipelines for Next-Generation Sequencing Clinical Assays_](https://www.tandfonline.com/doi/full/10.2144/000114492), which includes significant improvements compared to previous versions. These improvements reduce errors in variant detection, increasing the accuracy and reliability of results. Reads were sorted by coordinates by default in Galaxy. Below are the general alignment statistics generated by [**Samtools flagstat**](Recursos/Samtools%20flagstat.txt).
 
-Para evaluar el impacto de este filtrado, se utilizó **Qualimap**, revelando los siguientes resultados:  
-- Antes del filtrado, la media del puntaje de calidad de mapeo era de **27.27**.
-<p align="center"> <img src="Recursos/MAPQ_raw_BAM_file.png" alt="Imagen de MAPQ antes del filtrado"> </p>
+The total reads analyzed were **45,303,149**, of which **99.63%** were successfully mapped to the reference genome. Additionally, **99.01%** of the reads were properly mapped as correctly paired mates. The percentage of singletons was low, representing only **0.22%**.
 
-- Tras el filtrado, esta media aumentó significativamente a **40.28**, indicando una mejora sustancial en la calidad de las lecturas.
-<p align="center"> <img src="Recursos/MAPQ_filtered_BAM_file.png" alt="Imagen de MAPQ despues del filtrado"> </p>
+---
 
-Este procesamiento es fundamental para asegurar un análisis fiable en los pasos posteriores, particularmente en la identificación de variantes (_variant calling_).
+## BAM File Processing
 
-## Pasos Adicionales de Procesamiento
+To ensure high-quality alignment and prepare data for reliable variant analysis, an exhaustive processing of the BAM file was performed. According to [_Assembling and Validating Bioinformatic Pipelines for Next-Generation Sequencing Clinical Assays_](https://meridian.allenpress.com/aplm/article/144/9/1118/427496/Assembling-and-Validating-Bioinformatic-Pipelines), perfectly aligned reads have an average mapping quality score (MAPQ) of **60** (1/10⁻⁶, meaning a 0.0001% probability of incorrect alignment). Conversely, a score below **30** (1/10⁻³, a 0.1% error probability) is generally considered unacceptable.
 
-Según el artículo [_From next-generation resequencing reads to a high-quality variant data set_](https://pmc.ncbi.nlm.nih.gov/articles/PMC5234474/#sec13), los pasos recomendados tras obtener el mapeo incluyen:
-- El alineamiento local
-- El marcaje de duplicados
-- La recalibración de la calidad de las bases. 
+Using **Filter BAM**, a filter was applied to select reads with **MAPQ ≥30**, discarding lower-quality reads. Additionally, all unmapped or mate-unmapped reads were excluded to obtain a cleaner and higher-quality dataset.
 
-Sin embargo, en este análisis, el paso de alineamiento local no se realizó porque **FreeBayes** ya incorpora este ajuste de forma interna durante el proceso de llamado de variantes. Esta funcionalidad está descrita en su [documentación oficial](https://github.com/freebayes/freebayes?tab=readme-ov-file#indels).
+To evaluate the impact of this filtering, **Qualimap** was used, revealing the following results:  
+- Before filtering, the mean mapping quality score was **27.27**.  
+<p align="center"> <img src="Recursos/MAPQ_raw_BAM_file.png" alt="MAPQ Before Filtering"> </p>
 
-En cuanto a la **recalibración de calidad de bases**, estudios como [_Toward better understanding of artifacts in variant calling from high coverage samples_](https://pmc.ncbi.nlm.nih.gov/articles/PMC4271055/) han demostrado que las mejoras en la precisión del llamado de variantes tras este paso son marginales. Además, dado su alto costo computacional, puede considerarse como un paso opcional en el preprocesamiento. Por estas razones, este paso no se llevó a cabo en el análisis actual.
+- After filtering, the mean increased significantly to **40.28**, indicating a substantial improvement in read quality.  
+<p align="center"> <img src="Recursos/MAPQ_filtered_BAM_file.png" alt="MAPQ After Filtering"> </p>
 
-## Marcado de Duplicados
+This processing is essential for ensuring reliable analysis in subsequent steps, particularly in variant calling.
 
-El siguiente paso en el procesamiento del archivo BAM fue el marcado de duplicados, realizado con la herramienta **Picard MarkDuplicates**. Antes del marcaje de duplicados, el ratio de duplicados era del **30.95%**, como se observa en el gráfico generado previamente:
+---
+
+## Additional Processing Steps
+
+According to [_From next-generation resequencing reads to a high-quality variant data set_](https://pmc.ncbi.nlm.nih.gov/articles/PMC5234474/#sec13), recommended post-mapping steps include:  
+- Local realignment  
+- Duplicate marking  
+- Base quality recalibration  
+
+However, in this analysis, local realignment was not performed because **FreeBayes** incorporates this adjustment internally during the variant calling process. This functionality is described in its [official documentation](https://github.com/freebayes/freebayes?tab=readme-ov-file#indels).
+
+As for **base quality recalibration**, studies like [_Toward better understanding of artifacts in variant calling from high coverage samples_](https://pmc.ncbi.nlm.nih.gov/articles/PMC4271055/) have shown that precision improvements in variant calling after this step are marginal. Additionally, given its high computational cost, it can be considered an optional preprocessing step. For these reasons, this step was not performed in the current analysis.
+
+---
+
+## Duplicate Marking
+
+The next step in BAM file processing was duplicate marking, performed using **Picard MarkDuplicates**. Before duplicate marking, the duplicate rate was **30.95%**, as shown in the previously generated graph:
 
 <p align="center">
-  <img src="Recursos/Duplicate_rate_raw_BAM_file.png" alt="Tasa de duplicados antes del marcado">
+  <img src="Recursos/Duplicate_rate_raw_BAM_file.png" alt="Duplicate Rate Before Marking">
 </p>
 
-Tras ejecutar esta herramienta, todos los duplicados fueron eliminados, dejando un archivo BAM limpio y sin lecturas duplicadas. Este proceso es crucial para reducir el sesgo y mejorar la precisión en el análisis posterior, como la identificación de variantes.
+After running this tool, all duplicates were removed, leaving a clean BAM file with no duplicated reads. This process is essential for reducing bias and improving accuracy in subsequent analyses, such as variant identification.
 
-## Llamado de Variantes (Variant Calling)
+---
 
-El llamado de variantes se realizó utilizando la herramienta **FreeBayes**, un método eficiente para identificar variantes genéticas en datos diploides.
+## Variant Calling
 
-## Normalización de Variantes
+Variant calling was performed using the **FreeBayes** tool, an efficient method for identifying genetic variants in diploid data.
 
-Tras el llamado de variantes, se realizó un paso de **normalización** utilizando **bcftools norm**. Este proceso es fundamental para garantizar la consistencia de las variantes detectadas, estandarizando su representación al reorganizar inserciones y deleciones (INDELs), además de resolver posibles conflictos en el archivo VCF.
+---
 
-## Filtrado de Variantes (Variant Filtering)
+## Variant Normalization
 
-Para mejorar la calidad de los datos resultantes del llamado de variantes, se aplicaron criterios de filtrado basados en las recomendaciones del artículo [_Effective filtering strategies to improve data quality from population-based whole exome sequencing studies_](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-125). Según los autores, un filtrado efectivo debe enfocarse en garantizar la calidad y profundidad de las variantes detectadas. 
+After variant calling, a **normalization** step was carried out using **bcftools norm**. This process is crucial for ensuring consistency in the detected variants, standardizing their representation by rearranging insertions and deletions (INDELs), and resolving potential conflicts in the VCF file.
 
-Por lo tanto, se utilizó **bcftools view** con la opción `-i`, aplicando los siguientes criterios:
-- **QUAL > 30**: Variantes con un puntaje de calidad superior a 30, reduciendo la probabilidad de falsos positivos.  
-- **DP > 10**: Un soporte de profundidad de lectura mayor a 10, asegurando mayor confianza en la validez de las variantes llamadas.
+---
 
-## Anotación de Variantes
+## Variant Filtering
 
-La anotación de las variantes identificadas se realizó utilizando **SNPeff**, una herramienta eficiente para predecir el impacto funcional de las variantes en genes y transcripciones. Este paso es esencial para asociar las variantes detectadas con su posible efecto biológico.
+To improve the quality of data resulting from variant calling, filtering criteria were applied based on recommendations from the article [_Effective filtering strategies to improve data quality from population-based whole exome sequencing studies_](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-125). According to the authors, effective filtering should focus on ensuring the quality and depth of detected variants.
 
-## Priorización de Variantes
+Thus, **bcftools view** was used with the `-i` option, applying the following criteria:
+- **QUAL > 30**: Variants with a quality score above 30, reducing the likelihood of false positives.  
+- **DP > 10**: A read depth greater than 10, ensuring greater confidence in the validity of the called variants.
 
-Para priorizar las variantes anotadas, se usó **VEP** (Variant Effect Predictor), seleccionando únicamente aquellas variantes que cumplieran con los criterios indicados en [_A Practical Guide To Filtering and Prioritizing Genetic Variants_](https://www.tandfonline.com/doi/full/10.2144/000114492):
+---
 
-- Variantes **exónicas** con desplazamiento de lectura, y sin sentido como:
+## Variant Annotation
+
+The identified variants were annotated using **SNPeff**, an efficient tool for predicting the functional impact of variants on genes and transcripts. This step is essential for associating detected variants with their possible biological effects.
+
+---
+
+## Variant Prioritization
+
+To prioritize annotated variants, **VEP** (Variant Effect Predictor) was used, selecting only those variants that met the criteria indicated in [_A Practical Guide To Filtering and Prioritizing Genetic Variants_](https://www.tandfonline.com/doi/full/10.2144/000114492):
+
+- **Exonic variants** with frameshift or nonsense effects such as:
   - `frameshift_variant`
   - `stop_gained`
   - `stop_loss`
-- Variantes **missense** que se consideraron con un impacto biológico significativo. Estas fueron clasificadas como **deleterias** según predicciones realizadas por herramientas como **SIFT**, **PolyPhen**, **LRT**, **MetaSVM**, y **Mutation Taster**.
+- **Missense variants** considered biologically significant. These were classified as **deleterious** based on predictions made by tools like **SIFT**, **PolyPhen**, **LRT**, **MetaSVM**, and **Mutation Taster**.
 
-Esta priorización permitió enfocar el análisis en las variantes con mayor probabilidad de estar asociadas a efectos funcionales o patológicos:
+This prioritization focused the analysis on variants most likely associated with functional or pathological effects:
 
 - **Missense variants**: 34  
 - **Frameshift variants**: 157  
 - **Stop gained**: 70  
 - **Stop loss**: 24
 
-## Discusión de Variantes
+---
 
-El análisis de variantes realizado con FreeBayes produjo un total de **52,217 variantes** clasificadas en diferentes tipos.
+## Variant Discussion
 
-### Clases Funcionales de Variantes
+Variant analysis performed with FreeBayes resulted in a total of **52,217 variants** classified into different types.
 
-En términos funcionales, se detectaron:  
-- **Variantes missense**: 17,225 (43.729%), que alteran la secuencia de aminoácidos y pueden tener un efecto significativo.  
-- **Variantes nonsense**: 90 (0.228%), causando la terminación prematura de la traducción.  
-- **Variantes silenciosas**: 22,075 (56.042%), que no alteran la secuencia de aminoácidos.
+---
 
-El ratio **missense/silent** de **0.7803** sugiere una proporción equilibrada entre variantes potencialmente dañinas y aquellas que no afectan la funcionalidad de las proteínas.
+### Functional Classes of Variants
+
+In functional terms, the following were detected:  
+- **Missense variants**: 17,225 (43.729%), which alter the amino acid sequence and may have a significant effect.  
+- **Nonsense variants**: 90 (0.228%), causing premature termination of translation.  
+- **Silent variants**: 22,075 (56.042%), which do not alter the amino acid sequence.
+
+The **missense/silent** ratio of **0.7803** suggests a balanced proportion between potentially damaging variants and those that do not affect protein functionality.
+
+---
 
 ### Ts/Tv Ratio
 
-El **Ts/Tv ratio** (ratio de transiciones a transversiones) calculado fue de **2.5334**. Este valor está en el rango esperado para datos de exoma, indicando un mapeo y llamado de variantes de alta calidad. Este ratio es útil como métrica de validación, ya que un valor dentro del rango esperado refleja precisión en las llamadas de SNPs y la calidad general del análisis.
+The **Ts/Tv ratio** (transition/transversion ratio) calculated was **2.5334**. This value falls within the expected range for exome data, indicating high-quality mapping and variant calling. This ratio is useful as a validation metric since a value within the expected range reflects precision in SNP calls and overall quality of the analysis.
 
+---
 
 
 
