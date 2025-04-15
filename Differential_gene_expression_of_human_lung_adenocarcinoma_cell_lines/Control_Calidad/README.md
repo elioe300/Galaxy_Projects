@@ -1,42 +1,58 @@
-# Análisis de Control de Calidad de **H1975**
-## Estadisticas básicas
+# Quality Control Analysis for **H1975**
+
+## Basic Statistics
 <p align="center">
-  <img src="../Recursos/H1975_general_stats.png">
+  <img src="../Recursos/H1975_general_stats.png" alt="Basic Statistics for H1975">
 </p>
 
-### Calidad de Secuencia por Base
+---
+
+### Per Base Sequence Quality
 <p align="center">
-  <img src="../Recursos/H1975_quality_scores.png">
+  <img src="../Recursos/H1975_quality_scores.png" alt="Quality Scores for H1975">
 </p>
 
-### Contenido de GC
+---
+
+### GC Content
 <p align="center">
-  <img src="../Recursos/H1975_GC_content.png">
+  <img src="../Recursos/H1975_GC_content.png" alt="GC Content for H1975">
 </p>
 
-### Contenido de adaptadores
+---
+
+### Adapter Content
 <p align="center">
-  <img src="../Recursos/H1975_adapter_content.png">
+  <img src="../Recursos/H1975_adapter_content.png" alt="Adapter Content for H1975">
 </p>
 
-# Análisis de Control de Calidad de **HCC827**
-## Estadisticas básicas
+---
+
+# Quality Control Analysis for **HCC827**
+
+## Basic Statistics
 <p align="center">
-  <img src="../Recursos/HCC_827_general_stats.png">
+  <img src="../Recursos/HCC_827_general_stats.png" alt="Basic Statistics for HCC827">
 </p>
 
-### Calidad de Secuencia por Base
+---
+
+### Per Base Sequence Quality
 <p align="center">
-  <img src="../Recursos/HCC_827_Quality_Scores.png">
+  <img src="../Recursos/HCC_827_Quality_Scores.png" alt="Quality Scores for HCC827">
 </p>
 
-### Contenido de GC
+---
+
+### GC Content
 <p align="center">
-  <img src="../Recursos/HCC_827_GC_content.png">
+  <img src="../Recursos/HCC_827_GC_content.png" alt="GC Content for HCC827">
 </p>
 
-### Contenido de adaptadores
+---
+
+### Adapter Content
 <p align="center">
-  <img src="../Recursos/HCC_827_adapter_content.png">
+  <img src="../Recursos/HCC_827_adapter_content.png" alt="Adapter Content for HCC827">
 </p>
 

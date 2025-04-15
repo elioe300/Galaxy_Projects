@@ -1,20 +1,22 @@
-# Introducción
+# Introduction
 
-Este proyecto tiene como objetivo profundizar en los aspectos básicos de **RNA-seq** y las buenas prácticas para el análisis transcriptómico utilizando la plataforma Galaxy. A través de este análisis, se busca **desarrollar conocimientos avanzados sobre el análisis de expresión diferencial**, abordando temas clave como:
+This project aims to delve into the fundamental aspects of **RNA-seq** and best practices for transcriptomic analysis using the Galaxy platform. Through this analysis, the objective is to **develop advanced knowledge on differential expression analysis**, addressing key topics such as:
 
-- La creación de gráficos para evaluar el estado de las muestras antes del análisis.
-- La visualización de los efectos del filtrado de genes de baja expresión mediante gráficos específicos.
-- El uso de gráficos como **MDS**, y **barplots** para explorar la distribución del p-valor y otros parámetros relevantes.
+- Creating graphs to evaluate the sample status prior to analysis.
+- Visualizing the effects of filtering low-expression genes using specific graphs.
+- Using graphs like **MDS** and **barplots** to explore the distribution of p-values and other relevant parameters.
 
-Además, se busca experimentar con el método de **pseudomapping** utilizando la herramienta **Salmon** como parte del flujo de trabajo. También se incluye un análisis básico de expresión diferencial (DGE) empleando **R**.
+Additionally, the project experiments with the **pseudomapping** method using the **Salmon** tool as part of the workflow. A basic differential gene expression (DGE) analysis employing **R** is also included.
 
-El proyecto utiliza como referencia los datos del estudio [*Long and short-read transcriptome profiling of human lung cancer cell lines*](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545141/), proporcionando un contexto práctico para ilustrar cada aspecto abordado.
+This project is based on data from the study [*Long and short-read transcriptome profiling of human lung cancer cell lines*](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545141/), providing a practical context to illustrate each addressed aspect.
 
-## Información de la muestra
+---
 
-Se basa en datos transcriptómicos generados en el marco del estudio titulado [*Long and short-read transcriptome profiling of human lung cancer cell lines*](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545141/) de Dong et al. (2020). Este estudio examinó los perfiles transcriptómicos de las líneas celulares **HCC827** y **H1975**. Estas son líneas celulares presentan diferentes mutaciones en el gen **EGFR**.
+## Sample Information
 
-Los datos utilizados incluyen lecturas _paired end_ de **RNA-Seq** generadas con tecnología **Illumina™**. Estos datos están disponibles en el repositorio SRA:
+The study utilizes transcriptomic data generated in the framework of the study titled [*Long and short-read transcriptome profiling of human lung cancer cell lines*](https://pmc.ncbi.nlm.nih.gov/articles/PMC7545141/) by Dong et al. (2020). This study analyzed the transcriptomic profiles of **HCC827** and **H1975** cell lines, which exhibit different mutations in the **EGFR** gene.
+
+The data includes paired-end **RNA-seq** reads generated using **Illumina™** technology. These datasets are available in the SRA repository:
 
 - **H1975**:
   - [SRR14286057](https://www.ncbi.nlm.nih.gov/sra/?term=SRR14286057)
@@ -24,132 +26,136 @@ Los datos utilizados incluyen lecturas _paired end_ de **RNA-Seq** generadas con
   - [SRR14286065](https://www.ncbi.nlm.nih.gov/sra/?term=SRR14286065)
   - [SRR14286066](https://www.ncbi.nlm.nih.gov/sra/?term=SRR14286066)
 
-# Metodología
+---
 
-## Análisis de Control de Calidad
+# Methodology
 
-Para no alargar este README, se informa que las lecturas presentan una buena calidad. Los valores de GC están dentro de lo esperado para datos de RNA-seq, los duplicados son aceptables, el contenido de adaptadores es despreciable, y el número de secuencias es adecuado para un análisis de expresión diferencial. 
+## Quality Control Analysis
 
-Las imágenes relacionadas con el control de calidad se pueden visualizar en el siguiente enlace: [Control de Calidad](./Control_Calidad)
+To keep this README concise, note that the reads exhibit good quality. GC values are within the expected range for RNA-seq data, duplicates are acceptable, adapter content is negligible, and the number of sequences is adequate for differential expression analysis.
+
+Related quality control images can be viewed in the following link: [Quality Control](./Control_Calidad)
+
+---
 
 ## Pseudomapping
 
-Se utilizó la configuración predeterminada de la herramienta **Salmon**, ajustando el parámetro **Kmer length** a un valor de 31. Esta decisión se basó en las recomendaciones de la [documentación oficial de Salmon](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode), donde indican _We find that a k of 31 seems to work well for reads of 75bp or longer_, en este caso las lecturas tienen 80bp de longitud, así que cumplen esta condición.
+The default settings of the **Salmon** tool were used, adjusting the **Kmer length** parameter to a value of 31. This decision was based on the recommendations in the [official Salmon documentation](https://salmon.readthedocs.io/en/latest/salmon.html#preparing-transcriptome-indices-mapping-based-mode), which states: _We find that a k of 31 seems to work well for reads of 75bp or longer_. In this case, the reads are 80bp in length, fulfilling this condition.
 
-El análisis se llevó a cabo utilizando el transcriptoma de **GENCODE v47**, que se encuentra disponible en el siguiente enlace: [GENCODE v47](https://www.gencodegenes.org/human/).
+The analysis was carried out using the transcriptome from **GENCODE v47**, which is available at the following link: [GENCODE v47](https://www.gencodegenes.org/human/).
 
-Una vez generados los resultados con **Salmon**, estos se procesaron en **R** para llevar a cabo análisis adicionales, como la exploración y el análisis diferencial de expresión génica.
+Once results were generated with **Salmon**, further processing was done in **R** to perform additional analyses, including exploratory and differential gene expression analysis.
 
-## Exploración de los datos
+---
 
-Para la exploración de los datos, se definieron los nombres de las muestras y sus grupos experimentales. Se localizaron los archivos de cuantificación de Salmon y se generó un mapa de transcritos a genes basado en GENCODE v47. Los datos se importaron con tximport para obtener una matriz de conteos, que se limpió y renombró. Finalmente, se anotaron los genes utilizando org.Hs.eg.db, eliminando duplicados y genes sin anotación válida. Los datos están preparados para el análisis DGE.
+## Data Exploration
 
-### Gráfica preliminar
+During data exploration, sample names and their experimental groups were defined. Salmon quantification files were located, and a transcript-to-gene map based on GENCODE v47 was generated. The data was imported using tximport to obtain a count matrix, which was cleaned and renamed. Finally, genes were annotated using org.Hs.eg.db, removing duplicates and genes without valid annotations. The data is now ready for DGE analysis.
 
-Para explorar las características iniciales de los datos RNA-seq antes de aplicar análisis diferenciales o correcciones metodológicas, se hizo uso de una gráfica de tipo violin. En el eje **y** se encuentran los valores de expresión en **log2 Counts per Million (logCPM)**, mientras que el eje **x** muestra las distintas muestras: **H1975_1**, **H1975_2**, **HCC827_1** y **HCC827_2**.
+---
 
-Cada violín ilustra la densidad de los datos de expresión para cada muestra, proporcionando una idea de cómo se distribuyen los genes. La línea negra en el centro de cada violín señala la **mediana** de la expresión, que sirve como referencia para los niveles centrales de cada muestra.
+### Preliminary Graph
+
+To explore the initial characteristics of RNA-seq data before applying differential analyses or methodological corrections, a violin plot was used. On the **y-axis**, expression values are displayed in **log2 Counts per Million (logCPM)**, while the **x-axis** shows the different samples: **H1975_1**, **H1975_2**, **HCC827_1**, and **HCC827_2**.
+
+Each violin illustrates the density of expression data for each sample, providing an idea of gene distribution. The black line in the center of each violin indicates the **median** expression level, serving as a reference for central levels in each sample.
 
 <p align="center">
   <img src="./Recursos/LogCPMnofiltnonTMM.png">
 </p>
 
-Se observa una acumulación significativa de genes con baja expresión por debajo de la mediana. Estos genes suelen introducir ruido en el análisis y no aportan información biológicamente relevante. El paquete **edgeR** tiene una opción denominada `filterbyExpr` para eliminar genes de baja expresión y asegurar que solo se incluyan aquellos que están biológicamente activos y relevantes para el análisis de expresión diferencial.
+A significant accumulation of genes with low expression below the median is observed. These genes often introduce noise into the analysis and do not provide biologically relevant information. The **edgeR** package offers a `filterbyExpr` option to eliminate low-expression genes and ensure that only biologically active and relevant ones are included in differential expression analysis.
 
-### Gráfica tras aplicar `filterByExpr`
+---
 
-Tras aplicar el filtro `filterByExpr`, se observan cambios significativos en la distribución de los datos RNA-seq, reflejados en la gráfica:
+### Graph After Applying `filterByExpr`
+
+After applying the `filterByExpr` filter, significant changes in the RNA-seq data distribution are observed, as reflected in the graph:
 
 <p align="center">
   <img src="./Recursos/LogCPMfilterednonTMM.png">
 </p>
 
-Los genes con baja expresión, que generan ruido en los datos y afectan la interpretación, han sido eliminados. Esto se traduce en unas distribuciones más homogéneas y limpias. Tras el filtrado de genes, la mediana está ajustada a valores de expresión logCPM donde los genes ya no son ruidosos, proporcionando una referencia adecuada para comparaciones entre muestras.
-Aunque los datos han sido filtrados, es necesario proceder con la normalización por TMM para corregir diferencias técnicas entre muestras, asegurando que las variaciones observadas sean de origen biológico.
+Genes with low expression, which generate noise and affect interpretation, have been removed. This results in cleaner and more homogeneous distributions. After gene filtering, the median is adjusted to logCPM expression values where genes are no longer noisy, providing a suitable reference for sample comparisons.
+While the data has been filtered, normalization by TMM is necessary to correct technical differences between samples, ensuring that observed variations are of biological origin.
 
-### Gráfica tras aplicar TMM
+---
 
-Después de aplicar la normalización por TMM (Trimmed Mean of M-values), los datos RNA-seq muestran una distribución ajustada y comparable entre las muestras, reflejada en la gráfica:
+### Plot After Applying TMM
 
-<p align="center">
-  <img src="./Recursos/LogCPMfilteredTMM.png">
-</p>
-
-Las distribuciones de logCPM son ahora más consistentes entre las muestras, lo que indica que se han corregido las diferencias técnicas, como la profundidad de secuenciación o la composición de las librerías.
-Las líneas negras que representan las medianas de las distribuciones están ahora alineadas entre las muestras, mostrando que la normalización ha equilibrado los niveles de expresión para permitir comparaciones confiables.
-
-Gracias a TMM, las variaciones no biológicas entre las muestras han sido mitigadas, garantizando que cualquier diferencia observada sea mayoritariamente de origen biológico.
-
-*(_Agradezco a Daniel Beiting por la profunda explicación dada sobre el análisis transcriptómico en su página [DIYtrasncriptomics](https://diytranscriptomics.com/), se ha usado parte de sus scripts para visualizar todos los pasos anteriormente mencionados_)*
-
-
-### ¿Qué es un plot MDS?
-
-El plot MDS (*Multidimensional Scaling Plot*) es una herramienta de visualización utilizada para representar gráficamente las relaciones entre muestras en un espacio de menor dimensión, generalmente en dos dimensiones. Suele ser un paso antes de proceder con análisis diferenciales, ya que ayuda a confirmar que las agrupaciones observadas coinciden con las expectativas del diseño experimental. Nos permite detectar si los agrupamientos entre muestras reflejan similitudes biológicas o hay outliers, ya sea por errores técnicos o por diferencias significativas en la biología subyacente.
-
-### Análisis del plot MDS para las 4 muestras
-
-El plot MDS generado para las muestras **H1975_1**, **H1975_2**, **HCC827_1** y **HCC827_2** muestra una clara separación entre dos grupos:
+After applying normalization using TMM (Trimmed Mean of M-values), RNA-seq data exhibits an adjusted and comparable distribution across samples, reflected in the graph:
 
 <p align="center">
-  <img src="./Recursos/PlotMDS.png">
+  <img src="./Recursos/LogCPMfilteredTMM.png" alt="TMM Normalized Data">
 </p>
 
-- Las muestras **H1975_1** y **H1975_2** están cercanas en el espacio MDS, lo que indica que tienen perfiles de expresión génica muy similares.  
-- Las muestras **HCC827_1** y **HCC827_2** forman un grupo separado, reflejando la consistencia entre las réplicas biológicas de la línea celular HCC827.
+The logCPM distributions are now more consistent between samples, indicating that technical differences, such as sequencing depth or library composition, have been corrected. The black lines representing the medians of the distributions are now aligned across samples, showing that normalization has balanced expression levels for reliable comparisons.
 
-El plot MDS confirma que las diferencias observadas entre las muestras son consistentes con las expectativas experimentales: las réplicas biológicas de cada línea celular son similares entre sí, pero las líneas celulares H1975 y HCC827 tienen perfiles de expresión claramente distintos. Esto valida el diseño experimental y sugiere que los datos son confiables para proceder con análisis de expresión diferencial.
+Thanks to TMM normalization, non-biological variations between samples have been mitigated, ensuring that observed differences are predominantly biological.
 
-### Comprobación de la Distribución de p-valores
-Otro paso recomendable a realizar es la comprobación de la distribución de los p-valores. Esto es relevante, ya que en nuestro caso porque estamos realizando una prueba estadistica con cientos, miles o incluso millones de pvalores. Al revisar el histograma, podemos identificar inmediatamente si la prueba estadística ha capturado diferencias significativas a través de muchos p-valores muy pequeños o, por el contrario, si la distribución es completamente uniforme, lo que podría indicar falta de señal o problemas en el análisis. Este gráfico permite obtener una visión inmediata del comportamiento de las pruebas a lo largo de todas las hipótesis y facilita la identificación de posibles problemas.
+*(_Acknowledgment to Daniel Beiting for his comprehensive explanation of transcriptomic analysis on his website [DIYtranscriptomics](https://diytranscriptomics.com/), part of his scripts were used to visualize all previously mentioned steps_)*
 
-A continuación, se muestran seis versiones aproximadas de lo que puede parecer el histograma:
+---
+
+### What is an MDS Plot?
+
+The MDS plot (*Multidimensional Scaling Plot*) is a visualization tool used to graphically represent relationships among samples in a lower-dimensional space, typically two dimensions. It is often performed before proceeding with differential analyses, as it helps confirm whether observed clustering matches the expectations of the experimental design. It allows us to detect whether sample groupings reflect biological similarities or whether outliers exist, caused by technical errors or significant differences in underlying biology.
+
+---
+
+### MDS Plot Analysis for the 4 Samples
+
+The MDS plot generated for **H1975_1**, **H1975_2**, **HCC827_1**, and **HCC827_2** shows a clear separation into two groups:
 
 <p align="center">
-  <img src="./Recursos/Ejemplos_pvalores.png">
+  <img src="./Recursos/PlotMDS.png" alt="MDS Plot for 4 Samples">
 </p>
 
-*Imagen tomada de [How to interpret a p-value histogram](http://varianceexplained.org/statistics/interpreting-pvalue-histogram/) por David Robinson.*
+- **H1975_1** and **H1975_2** samples are close in the MDS space, indicating that they have highly similar gene expression profiles.
+- **HCC827_1** and **HCC827_2** samples form a separate group, reflecting the consistency between the biological replicates of the HCC827 cell line.
 
-En nuestros datos, el histograma de p-valores muestra una distribución muy similar a la versión **A** de los ejemplos, en la que se observa una alta frecuencia de p-valores pequeños que decae rápidamente hacia valores mayores.
+The MDS plot confirms that observed differences among samples are consistent with experimental expectations: biological replicates of each cell line are similar to each other, but the H1975 and HCC827 cell lines exhibit distinctly different expression profiles. This validates the experimental design and suggests that the data is reliable for differential expression analysis.
+
+---
+
+### Checking p-Value Distribution
+
+Another recommended step is verifying the distribution of p-values. This is relevant, especially as we are conducting a statistical test with hundreds, thousands, or even millions of p-values. By reviewing the histogram, we can immediately identify whether the statistical test has captured significant differences through many very small p-values or, conversely, if the distribution is entirely uniform, which could indicate a lack of signal or issues in the analysis. This graph provides an immediate overview of the performance of tests across all hypotheses and facilitates the detection of potential problems.
+
+Below are six approximate versions of what the histogram might look like:
 
 <p align="center">
-  <img src="./Recursos/DistribucionFDR.png">
+  <img src="./Recursos/Ejemplos_pvalores.png" alt="p-Value Distribution Examples">
 </p>
 
-Esto sugiere que:
-- Muchas de las pruebas resultan en p-valores bajos, lo que indica evidencia significativa contra la hipótesis nula en numerosos casos.
-- La forma del histograma es la esperada bajo un escenario de descubrimientos reales, lo que confiere confianza en la robustez de los análisis realizados antes de la corrección por pruebas múltiples.
+*Image taken from [How to interpret a p-value histogram](http://varianceexplained.org/statistics/interpreting-pvalue-histogram/) by David Robinson.*
 
-*(_Agradezco a Ming ‘Tommy’ Tang por la maravillosa explicación dada respecto el [p-valor](https://divingintogeneticsandgenomics.com/post/understanding-p-value-multiple-comparisons-fdr-and-q-value/), y [la importancia de realizar el paso del histograma](https://divingintogeneticsandgenomics.com/post/downstream-of-bulk-rnaseq-read-in-salmon-output-using-tximport-and-then-deseq2/)_)*
+In our data, the p-value histogram shows a distribution very similar to example **A**, in which there is a high frequency of small p-values that quickly decay toward larger values.
 
-### Test estadístico
-Tras haber completado todos los puntos de control y verificado que se han implementado los procedimientos necesarios para minimizar la variabilidad técnica y conservar únicamente los genes relevantes, se procede a realizar el test estadístico. Para ello, se emplea el método de Benjamini-Hochberg para controlar la tasa de descubrimientos falsos, estableciéndose un p-valor de 0,05 y utilizando un logFoldchange de 1, que corresponde al valor predeterminado.
+<p align="center">
+  <img src="./Recursos/DistribucionFDR.png" alt="p-Value Histogram for FDR Distribution">
+</p>
+
+This suggests that:
+- Many tests result in small p-values, indicating significant evidence against the null hypothesis in numerous cases.
+- The shape of the histogram is as expected under a scenario of genuine discoveries, providing confidence in the robustness of analyses performed prior to multiple testing correction.
+
+*(_Acknowledgment to Ming ‘Tommy’ Tang for the wonderful explanation regarding [p-values](https://divingintogeneticsandgenomics.com/post/understanding-p-value-multiple-comparisons-fdr-and-q-value/) and [the importance of reviewing histograms](https://divingintogeneticsandgenomics.com/post/downstream-of-bulk-rnaseq-read-in-salmon-output-using-tximport-and-then-deseq2/)_)*
+
+---
+
+### Statistical Test
+
+After completing all checkpoints and verifying the implementation of procedures to minimize technical variability and retain only relevant genes, the statistical test is conducted. The Benjamini-Hochberg method is employed to control the false discovery rate, with a p-value threshold of 0.05 and a logFoldChange of 1, the default value.
 ```r
 is.de1 <- decideTests(result, adjust.method = "BH", p.value = 0.05, lfc=1)
 summary(is.de1)
 ```
 
 <p align="center">
-  <img src="./Recursos/Resultado_Test.png">
+  <img src="./Recursos/Resultado_Test.png" alt="Result Summary of Test">
 </p>
 
-El script completo se puede visualizar [aquí](./Recursos/DEG_Salmon.R)
+The complete script can be accessed [here](./Recursos/DEG_Salmon.R)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
